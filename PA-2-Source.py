@@ -7,31 +7,59 @@ def main():
     window = Tk()
     window.title("Merge Sort")
 
-    Label(window, text="Enter array number (1-9):").grid(row=0)
+    Label(window, text="Unsorted Array").grid(row=1, pady=(12,0), sticky=W)
+    Label(window, text="Sorted Array").grid(row=1, column=1, pady=(12,0), sticky=W)
     
+    listbox1 = Listbox(window, width=20)
+    scrollbar1 = Scrollbar(window, orient=VERTICAL)
+    listbox1.config(yscrollcommand=scrollbar1.set)
+    scrollbar1.config(command=listbox1.yview)
+    listbox1.grid(row=2, sticky=W)
+    scrollbar1.grid(row=2, sticky=E+NS)
+
+    listbox2 = Listbox(window, width=22)
+    scrollbar2 = Scrollbar(window, orient=VERTICAL)
+    listbox2.config(yscrollcommand=scrollbar2.set)
+    scrollbar2.config(command=listbox2.yview)
+    listbox2.grid(row=2, column=1)
+    scrollbar2.grid(row=2, column=1, sticky=E+NS)
+
+    Label(window, text="Enter array number (1-9):").grid(row=0)
     entry = Entry(window)
     entry.grid(row=0, column=1)
-
-    Button(window, text="Retrieve and Sort", command=partial(display, entry)).grid(row=0, column=2)
+    Button(window, text="Retrieve and Sort", command=partial(display, entry, listbox1, listbox2)).grid(row=0, column=2)
     
     window.mainloop()
 
-def display(entry):
+def display(entry, listbox1, listbox2):
     try:
         size = int(Entry.get(entry))
+        entry.delete(0, END)
+        
+        listbox1.delete(0, END)
+        listbox2.delete(0, END)
         
         if size in range(1,10):
-            array = generateNumbers(-10000,10000,1000 * size)
+            array = generateNumbers(-10000, 10000, 1000 * size)
+            for x in array:
+                listbox1.insert(END, x)
+                
             #sortedArray, time = mergeSort(array)
             #generateResults(sortedArray, time)
-            print("That is a valid number")
         else:
-            print("That is not a valid number")
+            listbox1.insert(END, "Invalid input")
+            listbox2.insert(END, "Invalid input")
     except:
-        print("That is not a valid number")
+        entry.delete(0, END)
+        
+        listbox1.delete(0, END)
+        listbox2.delete(0, END)
+        listbox1.insert(END, "Invalid input")
+        listbox2.insert(END, "Invalid input")
 
 def generateNumbers(rangeMin, rangeMax, size):
-    return random.sample(range(rangeMin, rangeMax), size)
+    array = random.sample(range(rangeMin, rangeMax), size)
+    return array
 
 ##  Rob already did this I just have to add it in, so don't do this
 #def mergeSort(array):
