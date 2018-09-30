@@ -1,5 +1,8 @@
 import time
 import random
+import csv
+import math
+import os.path
 from tkinter import *
 from functools import partial
 
@@ -51,8 +54,8 @@ def display(entry, listbox1, listbox2):
 
             for x in array:
                 listbox2.insert(END, x)
-                
-            #generateResults(sortedArray, elapsedTime)
+               
+            generateResults(array, elapsedTime, "Mergesort_Time.csv")
         else:
             listbox1.insert(END, "Invalid input")
             listbox2.insert(END, "Invalid input")
@@ -102,20 +105,33 @@ def mergeSort(array, left, right):
         mergeSort(array, mid+1, right)
         merge(array, left, mid, right)
 
-##  Creates the output spreadsheet
-##  Needs to check if spreadsheet is already generated because this will be used more than once
-##  If not yet generated, generate the file and column headers and call addResult
-##  If already generated, call addResult
-#def generateResults(sortedArray, elapsedTime):
-
-##  Add result to existing spreadsheet
-##  First call calculateResults to get values for all 4 columns
-##  Use test data for now
-#def addResults(sortedArray, elapsedTime):
-
-##  Returns 4 values for each column in spreadsheet
-##  Use test data for now
-#def calculateResults(sortedArray, elapsedTime):
+def generateResults(sortedArray, elapsedTime, fileName):
+    n = len(sortedArray)
     
+    nlogn = n * (math.log10(n))
+    
+    timeSpent = str(elapsedTime) + " ms"
+    
+    x = (nlogn / elapsedTime)
+    y = 0
+    while x >= 10:
+        x = x/10
+        y += 1
+    x = int(x)
+    x = str(x) + '*10^' + str(y)
+
+    
+    if os.path.isfile(fileName) == False:
+        with open(fileName, mode='w', newline='') as csv_file:
+            fieldnames = ['Input Size n for Array_i', 'Value of n*logn', 'Time Spent (milliseconds)', 'Value of (n*logn)/time']
+            writer = csv.DictWriter(csv_file, fieldnames=fieldnames)
+
+            writer.writeheader()
+            writer.writerow({'Input Size n for Array_i': n, 'Value of n*logn': nlogn, 'Time Spent (milliseconds)': timeSpent, 'Value of (n*logn)/time': x})
+    else:
+        with open(fileName, mode='a', newline='') as csv_file:
+            writer = csv.writer(csv_file)
+            writer.writerow((n, nlogn, timeSpent, x))
+
 if __name__ == "__main__":
     main()
