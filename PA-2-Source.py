@@ -41,11 +41,18 @@ def display(entry, listbox1, listbox2):
         
         if size in range(1,10):
             array = generateNumbers(-10000, 10000, 1000 * size)
+            
             for x in array:
                 listbox1.insert(END, x)
+
+            startTime = time.perf_counter()
+            mergeSort(array, 0, len(array) - 1)
+            elapsedTime = round(((time.perf_counter() - startTime) * 1000), 6)
+
+            for x in array:
+                listbox2.insert(END, x)
                 
-            #sortedArray, time = mergeSort(array)
-            #generateResults(sortedArray, time)
+            #generateResults(sortedArray, elapsedTime)
         else:
             listbox1.insert(END, "Invalid input")
             listbox2.insert(END, "Invalid input")
@@ -61,23 +68,54 @@ def generateNumbers(rangeMin, rangeMax, size):
     array = random.sample(range(rangeMin, rangeMax), size)
     return array
 
-##  Rob already did this I just have to add it in, so don't do this
-#def mergeSort(array):
+def merge(array, left, mid, right):
+    leftHalf = array[left:mid+1]
+    rightHalf = array[mid+1:right+1]
+
+    i = 0
+    j = 0
+    k = left
+    while i < len(leftHalf) and j < len(rightHalf):
+        if leftHalf[i] <= rightHalf[j]:
+            array[k] = leftHalf[i]
+            i += 1
+        else:
+            array[k] = rightHalf[j]
+            j += 1
+        k += 1
+
+    while i < len(leftHalf):
+        array[k] = leftHalf[i]
+        i += 1
+        k += 1
+
+    while j < len(rightHalf):
+        array[k] = rightHalf[j]
+        j += 1
+        k += 1
+
+def mergeSort(array, left, right):
+    if left < right:
+        mid = (left + right)//2
+
+        mergeSort(array, left, mid)
+        mergeSort(array, mid+1, right)
+        merge(array, left, mid, right)
 
 ##  Creates the output spreadsheet
 ##  Needs to check if spreadsheet is already generated because this will be used more than once
 ##  If not yet generated, generate the file and column headers and call addResult
 ##  If already generated, call addResult
-#def generateResults(sortedArray, time):
+#def generateResults(sortedArray, elapsedTime):
 
 ##  Add result to existing spreadsheet
 ##  First call calculateResults to get values for all 4 columns
 ##  Use test data for now
-#def addResults(sortedArray, time):
+#def addResults(sortedArray, elapsedTime):
 
 ##  Returns 4 values for each column in spreadsheet
 ##  Use test data for now
-#def calculateResults(sortedArray, time):
+#def calculateResults(sortedArray, elapsedTime):
     
 if __name__ == "__main__":
     main()
