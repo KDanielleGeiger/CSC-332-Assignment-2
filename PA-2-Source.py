@@ -125,7 +125,7 @@ def generateResults(sortedArray, elapsedTime, fileName):
     ##  Calculate values
     n = len(sortedArray)
     
-    nlogn = n * (math.log10(n))
+    nlogn = n * (math.log2(n))
     
     timeSpent = str(elapsedTime) + " ms"
     
